@@ -35,6 +35,7 @@ class Emotions(ABC):
         pass
 
     def __init__(self,_stateCache):
+
         self.stateCache = _stateCache
 
         self.RootState = False
@@ -49,7 +50,8 @@ class Emotions(ABC):
         if self.RootState:
             self._stateMachine.currentState = newState
             p("is Root State")
-        elif self.currentSuperState() is None:
+
+        elif self.currentSuperState is None:
             self.currentSuperState().SetSubstate(self)
 
 
@@ -123,9 +125,14 @@ class Happy(Emotions):
     def EnterState(self):
         p("Entered HappyState")
         self.InitializeSubState()
+        self.UpdateState()
 
     def UpdateState(self):
-        pass
+
+        MoodInput = input("Choose Next State?: ")
+
+        if MoodInput == "Excited":
+            self.SwitchState(self.stateCache.ExcitedState())
     def InitializeSubState(self):
         pass
 
