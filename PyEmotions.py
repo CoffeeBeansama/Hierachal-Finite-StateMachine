@@ -5,23 +5,6 @@ def p(text):
     print(text)
 class Emotions(ABC):
 
-#region getters
-    def BaseState(self):
-        return Emotions(ABC)
-
-    def currentSuperState(self):
-        return Emotions()
-
-    def currentSubState(self):
-        return Emotions()
-
-    def newSubState(self):
-        return Emotions()
-
-    def newSuperState(self):
-        return  Emotions()
-#endregion
-
     @abstractmethod
     def EnterState(self):
         pass
@@ -41,7 +24,7 @@ class Emotions(ABC):
         self.RootState = False
 
         self.currentSubState = self
-        self.currentSuperStae = self
+        self.currentSuperState = self
 
 
     def SwitchState(self,newState):
@@ -52,7 +35,7 @@ class Emotions(ABC):
             p("is Root State")
 
         elif self.currentSuperState is None:
-            self.currentSuperState().SetSubstate(self)
+            self.currentSuperState.SetSubstate(self)
 
 
     def SetSuperState(self,newSuperState):
@@ -128,11 +111,8 @@ class Happy(Emotions):
         self.UpdateState()
 
     def UpdateState(self):
+        pass
 
-        MoodInput = input("Choose Next State?: ")
-
-        if MoodInput == "Excited":
-            self.SwitchState(self.stateCache.ExcitedState())
     def InitializeSubState(self):
         pass
 
