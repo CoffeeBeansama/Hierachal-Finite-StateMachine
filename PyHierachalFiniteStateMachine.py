@@ -11,6 +11,8 @@ class PyHierachalFiniteStateMachine:
 
                        }
 
+        self.backButton = "Images/backArrow.png"
+        self.superStateButtonSize = (100, 100)
         self.windowSize = (350, 350)
 
         self.CreateWindow(_sg)
@@ -20,13 +22,17 @@ class PyHierachalFiniteStateMachine:
         self.currentState = self.stateCache.JoyFulState()
         self.currentState.EnterState()
 
-    def CreateWindow(self,_sg):
+    def CreateSuperStateButton(self,_image,_key):
+        return sg.Image(filename=_image,size=self.superStateButtonSize,key=_key,enable_events=True)
 
+    def CreateSubStateButton(self,_image,_key):
+        return sg.Image(filename=_image,size=self.buttonSize,key=_key,enable_events=True)
+    def CreateWindow(self,_sg):
         _sg.theme("black")
 
         layout = [
-            [sg.Text("Choose your Emotion")],
-            [sg.Image(self.Emojis["Joyful"],size=(100,100)),sg.Image(self.Emojis["Angry"],size=(100,100)),sg.Image(self.Emojis["Sad"],size=(100,100))]
+            [_sg.Text("Choose your Emotion"),_sg.Push(),_sg.Image(self.backButton,size=(80,35),visible=False,key="-backButton-")],
+            [self.CreateSuperStateButton(self.Emojis["Joyful"],"-joyful-"),self.CreateSuperStateButton(self.Emojis["Angry"],"-angry-"),self.CreateSuperStateButton(self.Emojis["Sad"],"-sad-")],
         ]
 
         window = _sg.Window("HierachalFiniteStateMachine", layout, size=self.windowSize)
@@ -34,8 +40,19 @@ class PyHierachalFiniteStateMachine:
         while True:
             event, values = window.Read()
 
+            if event == "-joyful-":
+                window["-angry-"].Update(visible=False)
+                window["-sad-"].Update(visible=False)
+                window["-backButton-"].Update(visible=True)
+
+
+
             if event == _sg.WINDOW_CLOSED:
                 break
+
+
+
+
 
 
 humanEmotion = PyHierachalFiniteStateMachine(sg)
