@@ -1,5 +1,5 @@
 from abc import ABC,abstractmethod
-
+import asyncio
 
 def p(text):
     print(text)
@@ -14,13 +14,14 @@ class Emotions(ABC):
         pass
 
     @abstractmethod
-    def InitializeSubState(self):
+    def InitializeSubState(self,_sg):
         pass
 
-    def __init__(self,_stateCache):
+    def __init__(self,_stateCache,_sg):
 
         self.stateCache = _stateCache
 
+        self.sg = _sg
         self.RootState = False
 
         self.currentSubState = self
@@ -57,14 +58,21 @@ class JoyfulState(Emotions):
 
 
     def EnterState(self):
-        print("Welcome To Joyful State :)")
+        p("Entered JoyfulState")
         self.InitializeSubState()
+        asyncio.run(self.UpdateState())
 
-    def UpdateState(self):
-        pass
+
+    async def UpdateState(self):
+        while True:
+            await asyncio.sleep(1)
+            p("JoyfulState")
+
 
     def InitializeSubState(self):
+
         self.SetSubstate(self.stateCache.HappyState())
+
 
 class SadState(Emotions):
 
@@ -77,6 +85,7 @@ class SadState(Emotions):
 
     def UpdateState(self):
         pass
+
     def InitializeSubState(self):
         pass
 
@@ -105,29 +114,39 @@ class Happy(Emotions):
     def __int__(self, stateCache):
         pass
 
-    def EnterState(self):
-        p("Entered HappyState")
-        self.InitializeSubState()
-        self.UpdateState()
 
-    def UpdateState(self):
-        pass
+    def EnterState(self):
+
+
+        asyncio.run(self.UpdateState())
+
+    async def UpdateState(self):
+
+        while True:
+            if self.sg.Window.values == "Ecstatic":
+                p("thisssssssssssss")
+            await asyncio.sleep(1)
+            p("HappyState")
+
+
 
     def InitializeSubState(self):
         pass
 
 
-class Excstatic(Emotions):
+class Ecstatic(Emotions):
 
     def __int__(self, stateCache):
         pass
 
     def EnterState(self):
-        p("Entered ExcstaticState")
-        self.InitializeSubState()
+        asyncio.run(self.UpdateState())
 
-    def UpdateState(self):
-        pass
+    async def UpdateState(self):
+        while True:
+            await asyncio.sleep(1)
+            p("EcstaticState")
+
     def InitializeSubState(self):
         pass
 
@@ -138,11 +157,15 @@ class Excited(Emotions):
         pass
 
     def EnterState(self):
-        p("Entered ExcstaticState")
-        self.InitializeSubState()
 
-    def UpdateState(self):
-        pass
+        self.InitializeSubState()
+        asyncio.run(self.UpdateState())
+
+
+    async def UpdateState(self):
+        while True:
+            await asyncio.sleep(1)
+            p("ExcitedState")
 
     def InitializeSubState(self):
         pass

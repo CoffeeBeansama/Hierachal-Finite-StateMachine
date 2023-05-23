@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 from PyEmotions import *
 
 class Mood(Enum):
@@ -8,7 +9,7 @@ class Mood(Enum):
     Angry = 3
 
     Happy = 4
-    Excstatic = 5
+    Ecstatic = 5
     Excited = 6
 
     Frustrated = 7
@@ -25,53 +26,58 @@ class StateCache:
 
 
 
-    def __init__(self):
+    def __init__(self,_sg):
+
+        sg = _sg
 
 
-
-        self.states = {Mood.Joyful: JoyfulState(self),
-                       Mood.Sad: SadState(self), Mood.Angry: AngryState(self),
-                       Mood.Happy: Happy(self),
-                       Mood.Excstatic: Excstatic(self),
-                       Mood.Excited: Excited(self),
-                       Mood.Frustrated: Frustrated(self),
-                       Mood.Annoyed: Annoyed(self), Mood.Mad: Mad(self),
-                       Mood.Depressed: Depressed(self),
-                       Mood.Sorrow: Sorrow(self), Mood.Pain: Pain(self)}
+        self.states = {
+                       "Joyful": JoyfulState(self,sg),
+                       "Sad": SadState(self,sg), "Angry": AngryState(self,sg),
+                       "Happy": Happy(self,sg),
+                       "Ecstatic": Ecstatic(self,sg),
+                       "Excited": Excited(self,sg),
+                       "Frustrated": Frustrated(self,sg),
+                       "Annoyed": Annoyed(self,sg),
+                       "Mad": Mad(self,sg),
+                       "Depressed": Depressed(self,sg),
+                       "Sorrow": Sorrow(self,sg),
+                       "Pain": Pain(self,sg)
+                     }
 
     def JoyFulState(self):
-        return self.states[Mood.Joyful]
+        return self.states["Joyful"]
 
     def SadState(self):
-        return self.states[Mood.Sad]
+        return self.states["Sad"]
 
     def AngryState(self):
-        return self.states[Mood.Angry]
+        return self.states["Angry"]
 
     def HappyState(self):
-        return self.states[Mood.Happy]
+        return self.states["Happy"]
 
-    def ExcstaticState(self):
-        return self.states[Mood.Excstatic]
+    def EcstaticState(self):
+        return self.states["Ecstatic"]
 
     def ExcitedState(self):
-        return self.states[Mood.Excited]
+        return self.states["Excited"]
 
     def FrustratedState(self):
-        return self.states[Mood.Frustrated]
+        return self.states["Frustrated"]
 
     def MadState(self):
-        return self.states[Mood.Mad]
+        return self.states["Mad"]
 
     def AnnoyedState(self):
-        return  self.states[Mood.Annoyed]
+        return self.states["Annoyed"]
 
     def SorrowState(self):
-        return self.states[Mood.Sorrow]
+        return self.states["Sorrow"]
 
     def PainState(self):
-        return self.states[Mood.Pain]
+        return self.states["Pain"]
 
     def DepressedState(self):
-        return self.states[Mood.Depressed]
+        return self.states["Depressed"]
 
