@@ -3,6 +3,12 @@ import asyncio
 
 def p(text):
     print(text)
+
+def p2(text):
+    for i in range(5):
+        print(text)
+
+
 class Emotions(ABC):
 
     @abstractmethod
@@ -14,14 +20,16 @@ class Emotions(ABC):
         pass
 
     @abstractmethod
-    def InitializeSubState(self,_sg):
+    def InitializeSubState(self):
         pass
 
-    def __init__(self,_stateCache,_sg):
+
+    def __init__(self,_stateCache,_main):
 
         self.stateCache = _stateCache
 
-        self.sg = _sg
+        self.main = _main
+
         self.RootState = False
 
         self.currentSubState = self
@@ -37,6 +45,80 @@ class Emotions(ABC):
 
         elif self.currentSuperState is None:
             self.currentSuperState.SetSubstate(self)
+
+    def ChooseSuperState(self):
+        while True:
+            try:
+                SelectedSuperState = int(input("Choose SuperState 1: Joyful, 2: Sad, 3: Angry || 0: to Exit  "))
+
+                if SelectedSuperState == 1:
+                    self.SwitchState(self.stateCache.JoyFulState())
+                elif SelectedSuperState == 2:
+                    self.SwitchState(self.stateCache.SadState())
+                elif SelectedSuperState == 3:
+                    self.SwitchState(self.stateCache.AngryState())
+                elif SelectedSuperState == 0:
+                    self.main.ReadEmotion = False
+                    break
+
+                else:
+                    p("Enter a valid value")
+
+
+            except ValueError: p("Enter a valid value")
+
+    def ChooseSadSubStates(self):
+        while True:
+            try:
+                SelectedSubState = int(input("Choose SubState 1: Depressed, 2: Sorrow, 3: Pain || 0: to ChangeSuperState "))
+                if SelectedSubState == 1:
+                    self.SetSubstate(self.stateCache.DepressedState())
+                elif SelectedSubState == 2:
+                    self.SetSubstate(self.stateCache.SorrowState())
+                elif SelectedSubState == 3:
+                    self.SetSubstate(self.stateCache.PainState())
+                elif SelectedSubState == 0:
+                    self.ChooseSuperState()
+
+                else: p("Enter a valid value")
+
+            except ValueError: p("Enter a valid value")
+
+    def ChooseAngrySubState(self):
+        while True:
+            try:
+                SelectedSubState = int(input("Choose SubState 1: Mad, 2: Frustrated, 3: Annoyed || 0: to ChangeSuperState "))
+                if SelectedSubState == 1:
+                    self.SetSubstate(self.stateCache.MadState())
+                elif SelectedSubState == 2:
+                    self.SetSubstate(self.stateCache.FrustratedState())
+                elif SelectedSubState == 3:
+                    self.SetSubstate(self.stateCache.AnnoyedState())
+                elif SelectedSubState == 0:
+                    self.ChooseSuperState()
+
+
+                else: p("Enter a valid value")
+
+            except ValueError: p("Enter a valid value")
+    def ChooseJoyfulSubStates(self):
+
+        while True:
+            try:
+                SelectedSubState = int(input("Choose SubState 1: Happy, 2: Ecstatic, 3: Excited || 0: to ChangeSuperState "))
+
+                if SelectedSubState == 1:
+                    self.SetSubstate(self.stateCache.HappyState())
+                elif SelectedSubState == 2:
+                    self.SetSubstate(self.stateCache.EcstaticState())
+                elif SelectedSubState == 3:
+                    self.SetSubstate(self.stateCache.ExcitedState())
+                elif SelectedSubState == 0:
+                    self.ChooseSuperState()
+
+                else: p("Enter a valid value")
+            except ValueError: p("Enter a valid value")
+
 
 
     def SetSuperState(self,newSuperState):
@@ -60,18 +142,19 @@ class JoyfulState(Emotions):
     def EnterState(self):
         p("Entered JoyfulState")
         self.InitializeSubState()
-        asyncio.run(self.UpdateState())
 
 
-    async def UpdateState(self):
-        while True:
-            await asyncio.sleep(1)
-            p("JoyfulState")
+
+    def UpdateState(self):
+
+
+
+        self.ChooseSuperState()
+
 
 
     def InitializeSubState(self):
-
-        self.SetSubstate(self.stateCache.HappyState())
+        self.ChooseJoyfulSubStates()
 
 
 class SadState(Emotions):
@@ -79,15 +162,18 @@ class SadState(Emotions):
     def __int__(self,stateCache):
         self.RootState = True
 
+
     def EnterState(self):
-        print("Im Sad :(")
+        p("Entered SadState")
+        self.main.ChangeSuperState = False
         self.InitializeSubState()
 
     def UpdateState(self):
-        pass
+        if self.main.ChangeSuperState:
+            self.ChooseSuperState()
 
     def InitializeSubState(self):
-        pass
+        self.ChooseSadSubStates()
 
 
 class AngryState(Emotions):
@@ -96,14 +182,17 @@ class AngryState(Emotions):
         self.RootState = True
 
     def EnterState(self):
-        print("Im Angry")
+        p("Entered AngryState")
+        self.main.ChangeSuperState = False
         self.InitializeSubState()
 
     def UpdateState(self):
-        pass
+        if self.main.ChangeSuperState:
+            self.ChooseSuperState()
 
     def InitializeSubState(self):
-        pass
+        self.ChooseAngrySubState()
+
 
 # endregion
 
@@ -116,17 +205,14 @@ class Happy(Emotions):
 
 
     def EnterState(self):
+        p("EnteredHappyState")
 
+        self.UpdateState()
 
-        asyncio.run(self.UpdateState())
+    def UpdateState(self):
+        p2("HappyState")
+        self.ChooseJoyfulSubStates()
 
-    async def UpdateState(self):
-
-        while True:
-            if self.sg.Window.values == "Ecstatic":
-                p("thisssssssssssss")
-            await asyncio.sleep(1)
-            p("HappyState")
 
 
 
@@ -140,12 +226,13 @@ class Ecstatic(Emotions):
         pass
 
     def EnterState(self):
-        asyncio.run(self.UpdateState())
+        p("Entered Ecstatic State")
+        self.UpdateState()
 
-    async def UpdateState(self):
-        while True:
-            await asyncio.sleep(1)
-            p("EcstaticState")
+    def UpdateState(self):
+        p2("EcstaticState")
+
+        self.ChooseJoyfulSubStates()
 
     def InitializeSubState(self):
         pass
@@ -158,14 +245,15 @@ class Excited(Emotions):
 
     def EnterState(self):
 
-        self.InitializeSubState()
-        asyncio.run(self.UpdateState())
+        p("Entered Excited State")
+        self.UpdateState()
 
 
-    async def UpdateState(self):
-        while True:
-            await asyncio.sleep(1)
-            p("ExcitedState")
+
+    def UpdateState(self):
+        p2("Excited State")
+
+        self.ChooseJoyfulSubStates()
 
     def InitializeSubState(self):
         pass
@@ -178,10 +266,11 @@ class Frustrated(Emotions):
 
     def EnterState(self):
         p("Entered FrustratedState")
-        self.InitializeSubState()
+        self.UpdateState()
 
     def UpdateState(self):
-        pass
+        p2("FrustratedState")
+        self.ChooseAngrySubState()
 
     def InitializeSubState(self):
         pass
@@ -193,10 +282,11 @@ class Annoyed(Emotions):
 
     def EnterState(self):
         p("Entered AnnoyedState")
-        self.InitializeSubState()
+        self.UpdateState()
 
     def UpdateState(self):
-        pass
+        p2("Annoyed State")
+        self.ChooseAngrySubState()
 
     def InitializeSubState(self):
         pass
@@ -207,10 +297,11 @@ class Mad(Emotions):
         pass
     def EnterState(self):
         p("Entered MadState")
-        self.InitializeSubState()
+        self.UpdateState()
 
     def UpdateState(self):
-        pass
+        p2("Mad State")
+        self.ChooseAngrySubState()
 
     def InitializeSubState(self):
         pass
@@ -223,10 +314,11 @@ class Depressed(Emotions):
 
     def EnterState(self):
         p("Entered Depressed State")
-        self.InitializeSubState()
+        self.UpdateState()
 
     def UpdateState(self):
-        pass
+        p2("Depressed State")
+        self.ChooseSadSubStates()
 
     def InitializeSubState(self):
         pass
@@ -238,10 +330,11 @@ class Sorrow(Emotions):
 
     def EnterState(self):
         p("Entered Sorrow State")
-        self.InitializeSubState()
+        self.UpdateState()
 
     def UpdateState(self):
-        pass
+        p2("Sorrow State")
+        self.ChooseSadSubStates()
 
     def InitializeSubState(self):
         pass
@@ -253,10 +346,11 @@ class Pain(Emotions):
 
     def EnterState(self):
         p("Entered Pain State")
-        self.InitializeSubState()
+        self.UpdateState()
 
     def UpdateState(self):
-        pass
+        p2("Pain State")
+        self.ChooseSadSubStates()
 
     def InitializeSubState(self):
         pass

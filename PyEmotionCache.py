@@ -26,23 +26,23 @@ class StateCache:
 
 
 
-    def __init__(self,_sg):
+    def __init__(self,_main):
 
-        sg = _sg
+        self.main = _main
 
 
         self.states = {
-                       "Joyful": JoyfulState(self,sg),
-                       "Sad": SadState(self,sg), "Angry": AngryState(self,sg),
-                       "Happy": Happy(self,sg),
-                       "Ecstatic": Ecstatic(self,sg),
-                       "Excited": Excited(self,sg),
-                       "Frustrated": Frustrated(self,sg),
-                       "Annoyed": Annoyed(self,sg),
-                       "Mad": Mad(self,sg),
-                       "Depressed": Depressed(self,sg),
-                       "Sorrow": Sorrow(self,sg),
-                       "Pain": Pain(self,sg)
+                       "Joyful": JoyfulState(self,self.main),
+                       "Sad": SadState(self,self.main), "Angry": AngryState(self,self.main),
+                       "Happy": Happy(self,self.main),
+                       "Ecstatic": Ecstatic(self,self.main),
+                       "Excited": Excited(self,self.main),
+                       "Frustrated": Frustrated(self,self.main),
+                       "Annoyed": Annoyed(self,self.main),
+                       "Mad": Mad(self,self.main),
+                       "Depressed": Depressed(self,self.main),
+                       "Sorrow": Sorrow(self,self.main),
+                       "Pain": Pain(self,self.main)
                      }
 
     def JoyFulState(self):
